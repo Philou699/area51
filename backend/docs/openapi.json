@@ -1,0 +1,2664 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Message de bienvenue confirmant que l’API répond",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Bonjour !"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Vérification de l’état de l’API",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/about.json": {
+      "get": {
+        "operationId": "AppController_getAbout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Informations structurées sur le client et le serveur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AboutResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Métadonnées sur les services disponibles",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "description": "Crée un utilisateur avec l’e-mail et le mot de passe fournis, puis émet les jetons d’accès et de rafraîchissement.",
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Utilisateur enregistré avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "La validation a échoué pour les données fournies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Un compte existe déjà pour cette adresse e-mail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Créer un nouveau compte utilisateur",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "description": "Valide les identifiants, émet les jetons d’accès/de rafraîchissement et positionne le cookie de rafraîchissement.",
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "La validation des identifiants fournis a échoué",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authentifier un utilisateur par e-mail et mot de passe",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "description": "Supprime le cookie de rafraîchissement de la réponse et consigne la déconnexion.",
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Déconnexion effectuée"
+          }
+        },
+        "summary": "Révoquer le cookie de jeton de rafraîchissement",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/oauth2/google": {
+      "post": {
+        "description": "Échange un jeton Google ID contre des jetons applicatifs. Requiert la configuration du service OAuth2.",
+        "operationId": "AuthController_loginWithGoogleOAuth",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Google OAuth n’est pas configuré ou le jeton fourni est invalide",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authentifier via Google OAuth",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/services": {
+      "get": {
+        "description": "Returns all enabled services with their actions and reactions. Includes connection status for the authenticated user.",
+        "operationId": "ServicesController_listServices",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of services currently available to the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServicesListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Retrieve the catalog of services, actions and reactions",
+        "tags": [
+          "services"
+        ]
+      }
+    },
+    "/areas": {
+      "post": {
+        "description": "Creates an automation by binding an action to a reaction for the authenticated user.",
+        "operationId": "AreasController_createArea",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAreaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Area successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or action/reaction not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ValidationErrorResponseDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new area automation",
+        "tags": [
+          "areas"
+        ]
+      },
+      "get": {
+        "operationId": "AreasController_getAreas",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Areas belonging to the current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreasListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List areas created by the authenticated user",
+        "tags": [
+          "areas"
+        ]
+      }
+    },
+    "/areas/{id}": {
+      "put": {
+        "operationId": "AreasController_toggleArea",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Identifier of the area to update",
+            "schema": {
+              "example": 101,
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAreaStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated area status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed for the provided status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ValidationErrorResponseDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Area not found for the current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Enable or disable an area",
+        "tags": [
+          "areas"
+        ]
+      },
+      "patch": {
+        "operationId": "AreasController_updateArea",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Identifier of the area to update",
+            "schema": {
+              "example": 101,
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAreaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Area updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Provided data violated validation rules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ValidationErrorResponseDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Area not found for the current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update area metadata or configuration",
+        "tags": [
+          "areas"
+        ]
+      },
+      "delete": {
+        "operationId": "AreasController_deleteArea",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Identifier of the area to delete",
+            "schema": {
+              "example": 101,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Area deleted successfully"
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Area not found for the current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete an area",
+        "tags": [
+          "areas"
+        ]
+      }
+    },
+    "/letterboxd/test": {
+      "get": {
+        "operationId": "LetterboxdController_testFeed",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "query",
+            "description": "Letterboxd username to fetch",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sample of parsed Letterboxd activities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LetterboxdTestResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Username query parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Test Letterboxd RSS feed for a user",
+        "tags": [
+          "letterboxd"
+        ]
+      }
+    },
+    "/letterboxd/poll": {
+      "post": {
+        "operationId": "LetterboxdController_triggerPoll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Polling started successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LetterboxdPollingResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Manually trigger RSS polling for all areas",
+        "tags": [
+          "letterboxd"
+        ]
+      }
+    },
+    "/github/test": {
+      "get": {
+        "operationId": "GithubController_testRepository",
+        "parameters": [
+          {
+            "name": "owner",
+            "required": true,
+            "in": "query",
+            "description": "Organisation ou utilisateur GitHub",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repo",
+            "required": true,
+            "in": "query",
+            "description": "Nom du dépôt",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "required": false,
+            "in": "query",
+            "description": "Clé d’action optionnelle pour filtrer le résultat",
+            "schema": {
+              "enum": [
+                "new_issue",
+                "new_pull_request",
+                "new_release"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Récupération manuelle effectuée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GithubTestResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Paramètres manquants ou action non prise en charge",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Tester la récupération GitHub pour un dépôt",
+        "tags": [
+          "github"
+        ]
+      }
+    },
+    "/github/poll": {
+      "post": {
+        "operationId": "GithubController_triggerPolling",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Polling lancé avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GithubPollingResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Déclencher manuellement le polling GitHub pour toutes les areas",
+        "tags": [
+          "github"
+        ]
+      }
+    },
+    "/discord/test/messages": {
+      "get": {
+        "description": "Retourne jusqu’à 50 messages récents pour le salon indiqué. Nécessite la variable DISCORD_BOT_TOKEN dans la configuration.",
+        "operationId": "DiscordController_getRecentMessages",
+        "parameters": [
+          {
+            "name": "channelId",
+            "required": true,
+            "in": "query",
+            "description": "Identifiant du salon dont il faut récupérer les messages (obligatoire).",
+            "schema": {
+              "example": "123456789012345678",
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Nombre maximum de messages à récupérer (1-50)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10,
+              "example": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages récents du salon",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DiscordMessagePreviewDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Récupérer les derniers messages d’un salon",
+        "tags": [
+          "discord"
+        ]
+      }
+    },
+    "/discord/test/send-message": {
+      "post": {
+        "description": "Envoie un message texte simple via le bot configuré. Utile pour tester manuellement l’intégration Discord.",
+        "operationId": "DiscordController_sendMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendDiscordMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message envoyé avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "messageId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Envoyer un message dans un salon Discord",
+        "tags": [
+          "discord"
+        ]
+      }
+    },
+    "/connections/github/start": {
+      "post": {
+        "description": "Génère une URL d’autorisation et un paramètre state pour connecter l’utilisateur authentifié à GitHub.",
+        "operationId": "ConnectionsController_startGithub",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "URL d’autorisation générée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GithubAuthorizeResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Initier la connexion OAuth GitHub",
+        "tags": [
+          "connections"
+        ]
+      }
+    },
+    "/connections/github/complete": {
+      "post": {
+        "description": "Échange le code d’autorisation contre des jetons et enregistre le compte connecté.",
+        "operationId": "ConnectionsController_completeGithub",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteGithubDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Compte GitHub connecté avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GithubConnectionResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "State invalide ou code d’autorisation refusé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ValidationErrorResponseDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Finaliser la connexion GitHub",
+        "tags": [
+          "connections"
+        ]
+      }
+    },
+    "/connections/discord/start": {
+      "post": {
+        "description": "Génère une URL d’autorisation pour installer le bot et autoriser l’accès aux serveurs de l’utilisateur.",
+        "operationId": "ConnectionsController_startDiscord",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "URL Discord générée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordAuthorizeResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Initier la connexion OAuth Discord",
+        "tags": [
+          "connections"
+        ]
+      }
+    },
+    "/connections/discord/complete": {
+      "post": {
+        "description": "Échange le code contre un jeton utilisateur, vérifie le serveur sélectionné et enregistre la connexion.",
+        "operationId": "ConnectionsController_completeDiscord",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteDiscordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Compte Discord connecté avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordConnectionResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "State invalide ou code refusé par Discord",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ValidationErrorResponseDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Finaliser la connexion Discord",
+        "tags": [
+          "connections"
+        ]
+      }
+    },
+    "/connections/discord/guilds": {
+      "get": {
+        "description": "Renvoie les guildes (serveurs) sur lesquels l'utilisateur a autorisé le bot.",
+        "operationId": "ConnectionsController_listDiscordGuilds",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Liste des guildes Discord accessibles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordGuildListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lister les serveurs Discord connectés",
+        "tags": [
+          "connections"
+        ]
+      }
+    },
+    "/connections/discord/guilds/{guildId}/channels": {
+      "get": {
+        "description": "Renvoie les canaux textuels où le bot peut écrire ou réagir pour le serveur sélectionné.",
+        "operationId": "ConnectionsController_listDiscordChannels",
+        "parameters": [
+          {
+            "name": "guildId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Canaux Discord disponibles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelListResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Serveur Discord inconnu ou non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ValidationErrorResponseDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lister les canaux Discord d’un serveur",
+        "tags": [
+          "connections"
+        ]
+      }
+    },
+    "/connections": {
+      "get": {
+        "operationId": "ConnectionsController_listConnections",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Statut de connexion actuel pour chaque fournisseur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionsListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lister les fournisseurs externes connectés par l’utilisateur",
+        "tags": [
+          "connections"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Area API",
+    "description": "API documentation",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "AboutClientDto": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "example": "127.0.0.1"
+          }
+        },
+        "required": [
+          "host"
+        ]
+      },
+      "AboutActionDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "create_issue"
+          },
+          "description": {
+            "type": "string",
+            "example": "Créer une nouvelle issue GitHub lorsque l’automatisation se déclenche"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ]
+      },
+      "AboutReactionDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "send_notification"
+          },
+          "description": {
+            "type": "string",
+            "example": "Envoyer une notification via l’intégration configurée"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ]
+      },
+      "AboutServiceDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "github"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AboutActionDto"
+            }
+          },
+          "reactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AboutReactionDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "actions",
+          "reactions"
+        ]
+      },
+      "AboutServerDto": {
+        "type": "object",
+        "properties": {
+          "current_time": {
+            "type": "number",
+            "example": 1735305600,
+            "description": "Horodatage Unix actuel du serveur"
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AboutServiceDto"
+            }
+          }
+        },
+        "required": [
+          "current_time",
+          "services"
+        ]
+      },
+      "AboutResponseDto": {
+        "type": "object",
+        "properties": {
+          "client": {
+            "$ref": "#/components/schemas/AboutClientDto"
+          },
+          "server": {
+            "$ref": "#/components/schemas/AboutServerDto"
+          }
+        },
+        "required": [
+          "client",
+          "server"
+        ]
+      },
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "new.user@example.com",
+            "description": "Adresse e-mail utilisée pour créer le compte"
+          },
+          "password": {
+            "type": "string",
+            "example": "StrongP@ssw0rd!",
+            "description": "Mot de passe respectant les exigences (majuscules, minuscules, chiffre, caractère spécial, sans espace)"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "6f1b88c8-2b8d-4bd4-9cb8-0a6ec9221f2f",
+            "description": "Identifiant unique de l’utilisateur authentifié"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com",
+            "description": "Adresse e-mail de l’utilisateur authentifié"
+          },
+          "roles": {
+            "example": [
+              "user"
+            ],
+            "description": "Rôles attribués à l’utilisateur",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "roles"
+        ]
+      },
+      "RegisterResponseDto": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+            "description": "Jeton d’accès pour authentifier les requêtes suivantes"
+          },
+          "expires_in": {
+            "type": "number",
+            "example": 600,
+            "description": "Durée de validité du jeton d’accès en secondes"
+          },
+          "token_type": {
+            "type": "string",
+            "example": "Bearer",
+            "description": "Type de jeton émis",
+            "default": "Bearer"
+          },
+          "user": {
+            "$ref": "#/components/schemas/LoginUserDto"
+          },
+          "message": {
+            "type": "string",
+            "example": "Utilisateur créé avec succès",
+            "description": "Message de confirmation renvoyé après une inscription réussie"
+          }
+        },
+        "required": [
+          "access_token",
+          "expires_in",
+          "token_type",
+          "user",
+          "message"
+        ]
+      },
+      "ValidationErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "error": {
+            "type": "string",
+            "example": "Requête invalide",
+            "description": "Brève description de la classe d’erreur HTTP"
+          },
+          "message": {
+            "example": [
+              "le nom ne doit pas être vide",
+              "l’identifiant d’action doit être un entier"
+            ],
+            "description": "Messages de validation détaillés",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "statusCode",
+          "error",
+          "message"
+        ]
+      },
+      "ErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "error": {
+            "type": "string",
+            "example": "Requête invalide",
+            "description": "Brève description de la classe d’erreur HTTP"
+          },
+          "message": {
+            "type": "object",
+            "example": "Action invalide",
+            "description": "Explication lisible de l’erreur. Peut être une chaîne ou un tableau de chaînes en cas d’erreurs de validation."
+          }
+        },
+        "required": [
+          "statusCode",
+          "error",
+          "message"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com",
+            "description": "Adresse e-mail utilisée pour la connexion"
+          },
+          "password": {
+            "type": "string",
+            "example": "StrongP@ssw0rd!",
+            "description": "Mot de passe de l’utilisateur"
+          },
+          "rememberMe": {
+            "type": "boolean",
+            "example": true,
+            "description": "Si vrai, un jeton de rafraîchissement de plus longue durée est émis (si le client le supporte)."
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+            "description": "Jeton d’accès pour authentifier les requêtes suivantes"
+          },
+          "expires_in": {
+            "type": "number",
+            "example": 600,
+            "description": "Durée de validité du jeton d’accès en secondes"
+          },
+          "token_type": {
+            "type": "string",
+            "example": "Bearer",
+            "description": "Type de jeton émis",
+            "default": "Bearer"
+          },
+          "user": {
+            "$ref": "#/components/schemas/LoginUserDto"
+          }
+        },
+        "required": [
+          "access_token",
+          "expires_in",
+          "token_type",
+          "user"
+        ]
+      },
+      "UnauthorizedResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 401
+          },
+          "error": {
+            "type": "string",
+            "example": "Non autorisé",
+            "description": "Brève description de la classe d’erreur HTTP"
+          },
+          "message": {
+            "type": "object",
+            "example": "Identifiants invalides",
+            "description": "Explication lisible de l’erreur. Peut être une chaîne ou un tableau de chaînes en cas d’erreurs de validation."
+          }
+        },
+        "required": [
+          "statusCode",
+          "error",
+          "message"
+        ]
+      },
+      "TooManyRequestsResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 429
+          },
+          "error": {
+            "type": "string",
+            "example": "Trop de requêtes",
+            "description": "Brève description de la classe d’erreur HTTP"
+          },
+          "message": {
+            "type": "object",
+            "example": "Trop de tentatives de connexion. Réessayez plus tard.",
+            "description": "Explication lisible de l’erreur. Peut être une chaîne ou un tableau de chaînes en cas d’erreurs de validation."
+          }
+        },
+        "required": [
+          "statusCode",
+          "error",
+          "message"
+        ]
+      },
+      "GoogleOAuthDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "ya29.a0AfH6SMC...",
+            "description": "Google ID token (JWT) obtained from the client-side flow"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "ServiceActionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 12
+          },
+          "key": {
+            "type": "string",
+            "example": "issue_created"
+          },
+          "description": {
+            "type": "object",
+            "example": "Déclenchée lorsqu’une nouvelle issue GitHub est créée",
+            "nullable": true
+          },
+          "configSchema": {
+            "type": "object",
+            "nullable": true,
+            "description": "Schéma JSON décrivant les champs de configuration de l’action",
+            "example": {
+              "type": "object",
+              "properties": {
+                "owner": {
+                  "type": "string"
+                },
+                "repo": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "owner",
+                "repo"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "description",
+          "configSchema"
+        ]
+      },
+      "ServiceReactionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 21
+          },
+          "key": {
+            "type": "string",
+            "example": "send_slack_message"
+          },
+          "description": {
+            "type": "object",
+            "example": "Envoyer un message Slack sur le salon configuré",
+            "nullable": true
+          },
+          "configSchema": {
+            "type": "object",
+            "nullable": true,
+            "description": "Schéma JSON décrivant les champs de configuration de la réaction",
+            "example": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "channel"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "description",
+          "configSchema"
+        ]
+      },
+      "ServiceWithConnectionsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 4
+          },
+          "slug": {
+            "type": "string",
+            "example": "github"
+          },
+          "name": {
+            "type": "string",
+            "example": "GitHub"
+          },
+          "requiresConnection": {
+            "type": "boolean",
+            "example": true,
+            "description": "Indique si l’utilisateur doit connecter un compte externe avant d’utiliser ce service"
+          },
+          "connected": {
+            "type": "boolean",
+            "example": true,
+            "description": "Précise si l’utilisateur authentifié a déjà connecté le fournisseur"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceActionDto"
+            }
+          },
+          "reactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceReactionDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "requiresConnection",
+          "connected",
+          "actions",
+          "reactions"
+        ]
+      },
+      "ServicesListResponseDto": {
+        "type": "object",
+        "properties": {
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceWithConnectionsDto"
+            }
+          }
+        },
+        "required": [
+          "services"
+        ]
+      },
+      "CreateAreaDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "M’avertir lorsqu’une nouvelle issue est créée",
+            "description": "Nom compréhensible donné à l’automatisation"
+          },
+          "actionId": {
+            "type": "number",
+            "example": 15,
+            "description": "Identifiant de l’action à associer à cette area"
+          },
+          "reactionId": {
+            "type": "number",
+            "example": 22,
+            "description": "Identifiant de la réaction à associer à cette area"
+          },
+          "actionConfig": {
+            "type": "object",
+            "nullable": true,
+            "description": "Paramètres optionnels de l’action. Renseigner les champs obligatoires définis par le schéma de l’action.",
+            "example": {
+              "owner": "open-source-org",
+              "repo": "cool-project"
+            }
+          },
+          "reactionConfig": {
+            "type": "object",
+            "nullable": true,
+            "description": "Paramètres optionnels de la réaction. Renseigner les champs obligatoires définis par le schéma de la réaction.",
+            "example": {
+              "channel": "#alerts"
+            }
+          },
+          "dedupKeyStrategy": {
+            "type": "string",
+            "nullable": true,
+            "description": "Nom de la stratégie utilisée pour dédupliquer les déclenchements (laisser vide pour désactiver).",
+            "example": "payload-hash"
+          }
+        },
+        "required": [
+          "name",
+          "actionId",
+          "reactionId"
+        ]
+      },
+      "AreaServiceSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "slug": {
+            "type": "string",
+            "example": "github"
+          },
+          "name": {
+            "type": "string",
+            "example": "GitHub"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name"
+        ]
+      },
+      "AreaActionSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 15
+          },
+          "key": {
+            "type": "string",
+            "example": "issue_created"
+          },
+          "description": {
+            "type": "object",
+            "example": "Déclenchée lorsqu’une nouvelle issue est créée sur le dépôt",
+            "nullable": true
+          },
+          "configSchema": {
+            "type": "object",
+            "description": "Schéma JSON décrivant la configuration attendue par l’action",
+            "nullable": true,
+            "example": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "service": {
+            "$ref": "#/components/schemas/AreaServiceSummaryDto"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "description",
+          "configSchema",
+          "service"
+        ]
+      },
+      "AreaReactionSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 22
+          },
+          "key": {
+            "type": "string",
+            "example": "send_notification"
+          },
+          "description": {
+            "type": "object",
+            "example": "Envoyer une notification sur le salon configuré",
+            "nullable": true
+          },
+          "configSchema": {
+            "type": "object",
+            "description": "Schéma JSON décrivant la configuration attendue par la réaction",
+            "nullable": true,
+            "example": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "service": {
+            "$ref": "#/components/schemas/AreaServiceSummaryDto"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "description",
+          "configSchema",
+          "service"
+        ]
+      },
+      "AreaResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 101
+          },
+          "name": {
+            "type": "string",
+            "example": "Notify me of new GitHub issues"
+          },
+          "enabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "actionConfig": {
+            "type": "object",
+            "description": "Configuration d’exécution utilisée par l’action",
+            "nullable": true,
+            "example": {
+              "owner": "open-source-org",
+              "repo": "area-project"
+            }
+          },
+          "reactionConfig": {
+            "type": "object",
+            "description": "Configuration d’exécution utilisée par la réaction",
+            "nullable": true,
+            "example": {
+              "channel": "#alerts"
+            }
+          },
+          "dedupKeyStrategy": {
+            "type": "object",
+            "description": "Stratégie utilisée pour générer les clés de déduplication des déclencheurs",
+            "nullable": true,
+            "example": "payload-hash"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-01-15T08:30:00.000Z",
+            "description": "Horodatage de création de l’area (ISO 8601)"
+          },
+          "action": {
+            "$ref": "#/components/schemas/AreaActionSummaryDto"
+          },
+          "reaction": {
+            "$ref": "#/components/schemas/AreaReactionSummaryDto"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "enabled",
+          "actionConfig",
+          "reactionConfig",
+          "dedupKeyStrategy",
+          "createdAt",
+          "action",
+          "reaction"
+        ]
+      },
+      "AreasListResponseDto": {
+        "type": "object",
+        "properties": {
+          "areas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AreaResponseDto"
+            }
+          }
+        },
+        "required": [
+          "areas"
+        ]
+      },
+      "UpdateAreaStatusDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether the area should be enabled (executed) or disabled"
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      },
+      "UpdateAreaDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "M’avertir lorsqu’une nouvelle issue GitHub est créée",
+            "description": "Nouveau nom attribué à l’area"
+          },
+          "actionId": {
+            "type": "number",
+            "example": 18,
+            "description": "Nouvel identifiant d’action à associer à l’area"
+          },
+          "reactionId": {
+            "type": "number",
+            "example": 24,
+            "description": "Nouvel identifiant de réaction à associer à l’area"
+          },
+          "actionConfig": {
+            "type": "object",
+            "nullable": true,
+            "description": "Nouvelle configuration de l’action",
+            "example": {
+              "repo": "new-repo"
+            }
+          },
+          "reactionConfig": {
+            "type": "object",
+            "nullable": true,
+            "description": "Nouvelle configuration de la réaction",
+            "example": {
+              "channel": "#support"
+            }
+          },
+          "dedupKeyStrategy": {
+            "type": "object",
+            "nullable": true,
+            "description": "Stratégie de déduplication mise à jour (mettre à null pour la désactiver)",
+            "example": "payload-hash"
+          }
+        }
+      },
+      "LetterboxdActivityPreviewDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "review",
+              "diary",
+              "watched",
+              "list",
+              "rating"
+            ],
+            "example": "review"
+          },
+          "filmTitle": {
+            "type": "string",
+            "example": "Interstellar"
+          },
+          "filmYear": {
+            "type": "object",
+            "example": 2014,
+            "nullable": true
+          },
+          "rating": {
+            "type": "object",
+            "example": 4.5,
+            "nullable": true
+          },
+          "reviewText": {
+            "type": "object",
+            "example": "Watched for the third time and it still blows my mind.",
+            "nullable": true
+          },
+          "watchedDate": {
+            "type": "object",
+            "example": "2025-01-18T21:15:00.000Z",
+            "nullable": true
+          },
+          "letterboxdUrl": {
+            "type": "string",
+            "example": "https://letterboxd.com/user/film/interstellar/"
+          },
+          "activityDate": {
+            "type": "string",
+            "example": "2025-01-19T09:30:00.000Z"
+          },
+          "isRewatch": {
+            "type": "object",
+            "example": true,
+            "nullable": true
+          }
+        },
+        "required": [
+          "type",
+          "filmTitle",
+          "filmYear",
+          "rating",
+          "reviewText",
+          "watchedDate",
+          "letterboxdUrl",
+          "activityDate",
+          "isRewatch"
+        ]
+      },
+      "LetterboxdTestResponseDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "cinephile42"
+          },
+          "count": {
+            "type": "number",
+            "example": 25
+          },
+          "activities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LetterboxdActivityPreviewDto"
+            }
+          }
+        },
+        "required": [
+          "username",
+          "count",
+          "activities"
+        ]
+      },
+      "LetterboxdPollingResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Polling triggered successfully"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "GithubTestResponseDto": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string",
+            "example": "open-source-org"
+          },
+          "repo": {
+            "type": "string",
+            "example": "area-backend"
+          },
+          "fetchedAt": {
+            "type": "string",
+            "example": "2025-01-20T12:34:56.000Z",
+            "description": "Horodatage de l’exécution de la récupération manuelle"
+          },
+          "result": {
+            "type": "object",
+            "description": "Charge utile brute renvoyée par GitHub (spécifique à l’action)",
+            "nullable": true
+          }
+        },
+        "required": [
+          "owner",
+          "repo",
+          "fetchedAt",
+          "result"
+        ]
+      },
+      "GithubPollingResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Polling GitHub lancé avec succès"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "DiscordAuthorPreviewDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "object",
+            "example": "123456789012345678",
+            "nullable": true
+          },
+          "username": {
+            "type": "object",
+            "example": "JaneDoe",
+            "nullable": true
+          },
+          "globalName": {
+            "type": "object",
+            "example": "Jane Doe",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "object",
+            "example": "Jane",
+            "nullable": true
+          },
+          "isBot": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "globalName",
+          "displayName",
+          "isBot"
+        ]
+      },
+      "DiscordAttachmentPreviewDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "113355779988776655"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://cdn.discordapp.com/attachments/.../image.png"
+          },
+          "filename": {
+            "type": "object",
+            "example": "image.png",
+            "nullable": true
+          },
+          "contentType": {
+            "type": "object",
+            "example": "image/png",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "filename",
+          "contentType"
+        ]
+      },
+      "DiscordMessagePreviewDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "123456789012345678"
+          },
+          "channelId": {
+            "type": "string",
+            "example": "123456789012345678"
+          },
+          "guildId": {
+            "type": "object",
+            "example": "123456789012345678",
+            "nullable": true
+          },
+          "content": {
+            "type": "string",
+            "example": "Ceci est le contenu d’un message d’exemple"
+          },
+          "author": {
+            "$ref": "#/components/schemas/DiscordAuthorPreviewDto"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscordAttachmentPreviewDto"
+            }
+          },
+          "mentions": {
+            "example": [
+              "123456789012345678"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-01-27T10:15:00.000Z"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://discord.com/channels/123/456/789"
+          }
+        },
+        "required": [
+          "id",
+          "channelId",
+          "guildId",
+          "content",
+          "author",
+          "attachments",
+          "mentions",
+          "createdAt",
+          "url"
+        ]
+      },
+      "SendDiscordMessageDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "123456789012345678",
+            "description": "Identifiant du salon cible (snowflake)"
+          },
+          "content": {
+            "type": "string",
+            "example": "Message envoyé automatiquement par Area !",
+            "description": "Contenu texte brut du message (2000 caractères max.)",
+            "maxLength": 2000
+          },
+          "mentionUserIds": {
+            "description": "Liste optionnelle d’identifiants d’utilisateurs à mentionner",
+            "example": [
+              "123456789012345678"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mentionRoleIds": {
+            "description": "Liste optionnelle d’identifiants de rôles à mentionner",
+            "example": [
+              "987654321987654321"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "channelId",
+          "content"
+        ]
+      },
+      "GithubAuthorizeResponseDto": {
+        "type": "object",
+        "properties": {
+          "authorizeUrl": {
+            "type": "string",
+            "example": "https://github.com/login/oauth/authorize?client_id=abc123&scope=repo%20user&state=0a7f599e-62a3-4b35-bc1c-374c4511eddf",
+            "description": "URL vers laquelle rediriger l’utilisateur pour autoriser GitHub"
+          },
+          "state": {
+            "type": "string",
+            "example": "0a7f599e-62a3-4b35-bc1c-374c4511eddf",
+            "description": "Valeur opaque utilisée pour valider le retour OAuth"
+          }
+        },
+        "required": [
+          "authorizeUrl",
+          "state"
+        ]
+      },
+      "CompleteGithubDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1a2b3c4d",
+            "description": "OAuth authorization code returned by GitHub"
+          },
+          "state": {
+            "type": "string",
+            "example": "0a7f599e-62a3-4b35-bc1c-374c4511eddf",
+            "description": "State parameter originally issued when starting the flow"
+          }
+        },
+        "required": [
+          "code",
+          "state"
+        ]
+      },
+      "GithubAccountDto": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "example": "octocat"
+          },
+          "avatarUrl": {
+            "type": "object",
+            "example": "https://avatars.githubusercontent.com/u/583231?v=4",
+            "nullable": true
+          }
+        },
+        "required": [
+          "login",
+          "avatarUrl"
+        ]
+      },
+      "GithubConnectionResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "provider": {
+            "type": "string",
+            "example": "github"
+          },
+          "account": {
+            "$ref": "#/components/schemas/GithubAccountDto"
+          }
+        },
+        "required": [
+          "success",
+          "provider",
+          "account"
+        ]
+      },
+      "DiscordAuthorizeResponseDto": {
+        "type": "object",
+        "properties": {
+          "authorizeUrl": {
+            "type": "string",
+            "example": "https://discord.com/api/oauth2/authorize?client_id=123&scope=identify%20guilds%20bot&state=xyz",
+            "description": "URL d'autorisation à ouvrir pour connecter Discord"
+          },
+          "state": {
+            "type": "string",
+            "example": "xyz-0a7f599e-62a3-4b35-bc1c-374c4511eddf",
+            "description": "Valeur state utilisée pour sécuriser le callback"
+          }
+        },
+        "required": [
+          "authorizeUrl",
+          "state"
+        ]
+      },
+      "CompleteDiscordDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1Zf9X2...",
+            "description": "Code d’autorisation retourné par Discord"
+          },
+          "state": {
+            "type": "string",
+            "example": "0a7f599e-62a3-4b35-bc1c-374c4511eddf",
+            "description": "Valeur state émise lors du démarrage du flux"
+          },
+          "guildId": {
+            "type": "string",
+            "example": "123456789012345678",
+            "description": "Identifiant du serveur (guild) sélectionné pendant l’autorisation"
+          }
+        },
+        "required": [
+          "code",
+          "state"
+        ]
+      },
+      "DiscordAccountDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "123456789012345678"
+          },
+          "username": {
+            "type": "string",
+            "example": "JeanDupont"
+          },
+          "displayName": {
+            "type": "object",
+            "example": "Jean Dupont",
+            "nullable": true
+          },
+          "avatarUrl": {
+            "type": "object",
+            "example": "https://cdn.discordapp.com/avatars/123/abc.png",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "displayName",
+          "avatarUrl"
+        ]
+      },
+      "DiscordGuildDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "987654321098765432"
+          },
+          "name": {
+            "type": "string",
+            "example": "Serveur Communauté"
+          },
+          "owner": {
+            "type": "boolean",
+            "example": true
+          },
+          "permissions": {
+            "type": "object",
+            "example": "3072",
+            "nullable": true,
+            "description": "Permissions accordées au bot sous forme de bitfield décimal"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "owner",
+          "permissions"
+        ]
+      },
+      "DiscordConnectionResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "provider": {
+            "type": "string",
+            "example": "discord"
+          },
+          "account": {
+            "$ref": "#/components/schemas/DiscordAccountDto"
+          },
+          "guild": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiscordGuildDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "provider",
+          "account",
+          "guild"
+        ]
+      },
+      "DiscordGuildListResponseDto": {
+        "type": "object",
+        "properties": {
+          "guilds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscordGuildDto"
+            }
+          }
+        },
+        "required": [
+          "guilds"
+        ]
+      },
+      "DiscordChannelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "123456789012345678"
+          },
+          "name": {
+            "type": "string",
+            "example": "général"
+          },
+          "type": {
+            "type": "number",
+            "example": 0,
+            "description": "Type de canal Discord (0 = texte, 5 = annonces, etc. — seuls les canaux textuels sont retournés)"
+          },
+          "parentId": {
+            "type": "object",
+            "example": "987654321012345678",
+            "nullable": true,
+            "description": "Identifiant de la catégorie parente, si présent"
+          },
+          "categoryName": {
+            "type": "object",
+            "example": "Catégorie Projet",
+            "nullable": true,
+            "description": "Nom de la catégorie qui contient ce canal"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "parentId",
+          "categoryName"
+        ]
+      },
+      "DiscordChannelListResponseDto": {
+        "type": "object",
+        "properties": {
+          "channels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscordChannelDto"
+            }
+          }
+        },
+        "required": [
+          "channels"
+        ]
+      },
+      "ConnectionStatusDto": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "example": "github"
+          },
+          "connected": {
+            "type": "boolean",
+            "example": true
+          },
+          "connectedAt": {
+            "type": "object",
+            "example": "2025-01-10T12:00:00.000Z",
+            "nullable": true,
+            "description": "Date de connexion au fournisseur (null si la connexion n’est pas active)."
+          },
+          "details": {
+            "type": "object",
+            "nullable": true,
+            "description": "Informations supplémentaires propres au provider (identifiants, métadonnées)."
+          }
+        },
+        "required": [
+          "provider",
+          "connected",
+          "connectedAt"
+        ]
+      },
+      "ConnectionsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "connections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectionStatusDto"
+            }
+          }
+        },
+        "required": [
+          "connections"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+version: "2"
+tunnels:
+  backend:
+    proto: http
+    addr: server:8080
+    inspect: false
+    pooling_enabled: true
+  frontend:
+    proto: http
+    addr: client_web:3000
+    inspect: false
+    pooling_enabled: true
+web_addr: 0.0.0.0:4040

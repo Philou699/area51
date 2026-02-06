@@ -1,0 +1,259 @@
+{
+  "main": {
+    "id": "6658f20407d6abf7",
+    "type": "split",
+    "children": [
+      {
+        "id": "5688f3485bd58fb2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "69db5bfccf2dfb65",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Présentation de la Documentation du Projet Area51.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Présentation de la Documentation du Projet Area51"
+            }
+          },
+          {
+            "id": "4386b8ffdf2a7461",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Présentation de la Documentation du Projet Area51.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Présentation de la Documentation du Projet Area51"
+            }
+          },
+          {
+            "id": "45fd3abea2f0bb07",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Présentation de la Documentation du Projet Area51.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Présentation de la Documentation du Projet Area51"
+            }
+          },
+          {
+            "id": "2a57b2e72243e0ac",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Guide de démarrage.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Guide de démarrage"
+            }
+          },
+          {
+            "id": "cd8e9da477d0c938",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Guide de démarrage.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Guide de démarrage"
+            }
+          },
+          {
+            "id": "75c65b2a6d06d028",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Technologies utilisées.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Technologies utilisées"
+            }
+          }
+        ],
+        "currentTab": 5
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1859df33b8e69793",
+    "type": "split",
+    "children": [
+      {
+        "id": "0ad63683ee49e42e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9a08aa8ff1ca3598",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "b812e170826149f4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "13f075680e34f0d5",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "e5e59aa87f813b33",
+    "type": "split",
+    "children": [
+      {
+        "id": "1efdcb89dd20bdc6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "45f7ca6bf557f6cc",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Guide de démarrage.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Guide de démarrage"
+            }
+          },
+          {
+            "id": "5aecf2107f531007",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Guide de démarrage.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Guide de démarrage"
+            }
+          },
+          {
+            "id": "cc003aa7cc07a519",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "e659d42820b69750",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Guide de démarrage.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Guide de démarrage"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "75c65b2a6d06d028",
+  "lastOpenFiles": [
+    "Documentation des endpoints.md.tmp.29927.1762987358374",
+    "Présentation de la Documentation du Projet Area51.md.tmp.29927.1762987166114",
+    "Présentation de la Documentation du Projet Area51.md",
+    "Guide de démarrage.md",
+    "Documentation technique.md",
+    "Documentation du code.md",
+    "Documentation des endpoints.md",
+    "Technologies utilisées.md",
+    "Technologies utilisées.md.tmp.29927.1762963060653",
+    "Pr�sentation de la Documentation du Projet Area51.md",
+    "Guide de démarrage.md.tmp.53038.1762957266297",
+    "Présentation de la Documentation du Projet Area51.md.tmp.53038.1762957031473",
+    "Untitled.base"
+  ]
+}

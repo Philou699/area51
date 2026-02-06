@@ -1,0 +1,154 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TokenType {
+  REFRESH
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+enum AreaLogStatus {
+  success
+  failure
+  skipped
+}
+
+model User {
+  id              Int            @id @default(autoincrement())
+  email           String            @unique @db.Text
+  passwordHash    String            @db.Text
+  createdAt       DateTime          @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime          @updatedAt @db.Timestamp(6)
+
+  areas            Area[]
+  tokens           Token[]
+  providerAccounts ProviderAccount[]
+}
+
+model ProviderAccount {
+  id             Int   @id @default(autoincrement())
+  userId         Int
+  provider       String   @db.Text
+  providerUserId String   @db.Text
+  accessToken    String   @db.Text
+  refreshToken   String?  @db.Text
+  expiresAt      DateTime? @db.Timestamp(6)
+  createdAt      DateTime @default(now()) @db.Timestamp(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+  @@unique([userId, provider])
+  @@index([userId])
+}
+
+model Service {
+  id        Int   @id @default(autoincrement())
+  slug      String   @unique @db.Text
+  name      String   @db.Text
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+
+  actions       Action[]
+  reactions     Reaction[]
+  webhookEvents WebhookEvent[]
+}
+
+model Action {
+  id           Int   @id @default(autoincrement())
+  serviceId    Int
+  key          String   @db.Text
+  description  String?  @db.Text
+  configSchema Json?
+  createdAt    DateTime @default(now()) @db.Timestamp(6)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  areas   Area[]  @relation("AreaAction")
+
+  @@unique([serviceId, key])
+  @@index([serviceId])
+}
+
+model Reaction {
+  id           Int   @id @default(autoincrement())
+  serviceId    Int
+  key          String   @db.Text
+  description  String?  @db.Text
+  configSchema Json?
+  createdAt    DateTime @default(now()) @db.Timestamp(6)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  areas   Area[]  @relation("AreaReaction")
+
+  @@unique([serviceId, key])
+  @@index([serviceId])
+}
+
+model Area {
+  id               Int   @id @default(autoincrement())
+  userId           Int
+  actionId         Int
+  reactionId       Int
+  name             String   @db.Text
+  enabled          Boolean  @default(true)
+  actionConfig     Json?
+  reactionConfig   Json?
+  dedupKeyStrategy String?  @db.Text
+  createdAt        DateTime @default(now()) @db.Timestamp(6)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action   Action   @relation("AreaAction", fields: [actionId], references: [id])
+  reaction Reaction @relation("AreaReaction", fields: [reactionId], references: [id])
+  logs     AreaLog[]
+
+  @@index([userId])
+  @@index([actionId])
+  @@index([reactionId])
+}
+
+model AreaLog {
+  id          Int        @id @default(autoincrement())
+  areaId      Int
+  status      AreaLogStatus
+  triggeredAt DateTime @default(now()) @db.Timestamp(6)
+  payload     Json?
+  error       String?  @db.Text
+
+  area Area @relation(fields: [areaId], references: [id], onDelete: Cascade)
+
+  @@index([areaId, triggeredAt])
+}
+
+model Token {
+  id        Int    @id @default(autoincrement())
+  userId    Int
+  type      TokenType
+  hashed    String    @db.Text
+  expiresAt DateTime? @db.Timestamp(6)
+  revokedAt DateTime? @db.Timestamp(6)
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model WebhookEvent {
+  id         Int   @id @default(autoincrement())
+  serviceId  Int
+  externalId String   @db.Text
+  receivedAt DateTime @default(now()) @db.Timestamp(6)
+  payload    Json?
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, externalId])
+  @@index([serviceId])
+}
